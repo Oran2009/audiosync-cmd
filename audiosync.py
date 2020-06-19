@@ -63,23 +63,23 @@ if __name__ == '__main__':
 
 # Load audio file
 audio_file = args.audio
-audio, audio_sr = librosa.load(audio_file)
+audio, _ = librosa.load(audio_file, sr=sampling_rate, mono=True, duration=duration_limit)
 
 # Load video file, creates .wav file of the video audio
 video_file = args.video
 handle, video_audio_file = tempfile.mkstemp(suffix='.wav')
 os.close(handle)
 extract(video_file, video_audio_file)
-video, video_sr = librosa.load(video_audio_file)
+video, _ = librosa.load(video_audio_file, sr=sampling_rate, mono=True, duration=duration_limit)
 os.unlink(video_audio_file)
 
 ##############---------DISPLAY WARPING PATH---------##############
 
 # Chromagram
-audio_chroma = defineChromagram(audio, audio_sr)
+audio_chroma = defineChromagram(audio, sampling_rate)
 
 # Chromagram
-video_chroma = defineChromagram(video, video_sr)
+video_chroma = defineChromagram(video, sampling_rate)
 
 # Performs RQA
 xsim = librosa.segment.cross_similarity(audio_chroma, video_chroma, mode='affinity')
