@@ -25,21 +25,23 @@ def defineChromagram(audio, sr):
 # Return: None
 # Uses: ffmpeg
 def combine(audio_file, video_file, save_location):
-    cmd = 'ffmpeg -y -loglevel quiet -i ' + video_file + ' -i ' + audio_file + \
-          ' -map 0:v -map 1:a -c:v copy -c:a aac -b:a 160k ' + save_location
+    cmd = ['ffmpeg', '-y', '-i', video_file, '-i', audio_file, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a',
+           'aac', '-b:a', '160k', save_location]
     subprocess.run(cmd)
 
 
 # Description: Runs .bat file to extract audio file from video
 # Input: Location of Video File, Save Location
 def extract(video_file, save_location):
-    cmd = 'ffmpeg -y -loglevel quiet -i ' + video_file + ' ' + save_location
+    cmd = ['ffmpeg', '-y', '-loglevel', 'quiet', '-i', video_file, save_location]
     subprocess.run(cmd)
 
 
 # Vars
 n_fft = 4410
 hop_size = 2205
+sampling_rate = 22050
+duration_limit = 60 # maximum duration of audio-video clips used to synchronize in seconds
 
 
 if __name__ == '__main__':
@@ -79,20 +81,24 @@ audio_chroma = defineChromagram(audio, audio_sr)
 # Chromagram
 video_chroma = defineChromagram(video, video_sr)
 
-# Performs subsequence DTW
-D, wp = librosa.sequence.dtw(X=audio_chroma, Y=video_chroma, subseq=True, metric='cosine', backtrack=True)
+# Performs RQA
+xsim = librosa.segment.cross_similarity(audio_chroma, video_chroma, mode='affinity')
+L_score, L_path = librosa.sequence.rqa(xsim, np.inf, np.inf, backtrack=True)
 
 audio_times = []
 video_times = []
 diff_times = []
-for a, v in wp * hop_size / audio_sr:
-    audio_times.append(a)
-    video_times.append(v)
-    diff_times.append(a-v)
+for v, a in L_path * hop_size / sampling_rate:
+    A = float(a)
+    V = float(v)
+    audio_times.append(A)
+    video_times.append(V)
+    diff_times.append((A - V))
 
 ##############---------SYNC PROCESS---------##############
 
 # Find mean of time differences
+diff_times = np.array(diff_times)
 mean = np.average(diff_times)
 std = np.std(diff_times)
 diff_times = [d for d in diff_times if np.abs(d-mean) < (0.5*std)]
