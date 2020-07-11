@@ -1,7 +1,5 @@
 # audiosync-cmd
 
-## description
-
 #### This tool automatically syncs matching video and audio files using recurrence quantification analysis (RQA). The tool allows you to adjust the sampling rate, hop length, and ftt window size so you can achieve near-perfect synchronization.
 
 #### At the start of this project, I used dynamic time warping (DTW) instead of recurrence quantification analysis (RQA) to synchronize the two audio tracks. This method seemed efficient for my purposes, but didn't achieve near-perfect synchronization on some tests. This led me to implement RQA, which maximizes alignment paths and relies on similarity rather than distance.
