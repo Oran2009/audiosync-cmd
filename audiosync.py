@@ -1,6 +1,5 @@
 import ffmpeg
 import librosa
-import librosa.display
 import numpy as np
 import os
 import sys
@@ -38,17 +37,21 @@ def extract(video_file, save_location):
 
 
 # Vars
-n_fft = 4410
-hop_size = 2205
-sampling_rate = 22050
-duration_limit = 60 # maximum duration of audio-video clips used to synchronize in seconds
+n_fft = 1024
+hop_size = 512
+sampling_rate = 44100
+duration_limit = 120 # maximum duration of audio-video clips used to synchronize in seconds
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Replaces the audio in a video file with '
                                                  'an external audio and maintains AV sync.')
-    parser.add_argument('-v', '--video', help='import video file', required=True, type=str)
-    parser.add_argument('-a', '--audio', help='import audio file', required=True, type=str)
+    parser.add_argument('-v', '--video', help='path to video file', required=True, type=str)
+    parser.add_argument('-a', '--audio', help='path to audio file', required=True, type=str)
+    parser.add_argument('-f', '--fft', default=1024, help='fft window size | recommended to be a power of 2 | default: 1024', required=False, type=int)
+    parser.add_argument('-hl', '--hoplength', default=512, help='hop length | The number of samples between successive frames | default: 512', required=False, type=int)
+    parser.add_argument('-sr', '--samplingrate', default=44100, help='sampling rate | Most applications use 44.1kHz | default: 44100 Hz', required=False, type=str)
+    parser.add_argument('-d', '--duration', default=120, help='duration to check | default: 120 seconds', required=False, type=int)
     parser.add_argument('-o', '--output', help='export video file', required=True, type=str)
 
     args = parser.parse_args()
@@ -59,21 +62,28 @@ if __name__ == '__main__':
         print('Audio file does not exist.')
         sys.exit(-1)
 
+# Vars
+n_fft = args.fft # ftt window size
+hop_size = args.hoplength # hop length
+sampling_rate = args.samplingrate # sampling rate
+duration_limit = args.duration # maximum duration of audio-video clips used to synchronize in seconds
+
+audio_file = args.audio
+video_file = args.video
+
 ##############---------LOAD FILES---------##############
 
 # Load audio file
-audio_file = args.audio
 audio, _ = librosa.load(audio_file, sr=sampling_rate, mono=True, duration=duration_limit)
 
 # Load video file, creates .wav file of the video audio
-video_file = args.video
 handle, video_audio_file = tempfile.mkstemp(suffix='.wav')
 os.close(handle)
 extract(video_file, video_audio_file)
 video, _ = librosa.load(video_audio_file, sr=sampling_rate, mono=True, duration=duration_limit)
 os.unlink(video_audio_file)
 
-##############---------DISPLAY WARPING PATH---------##############
+##############---------RQA---------##############
 
 # Chromagram
 audio_chroma = defineChromagram(audio, sampling_rate)
