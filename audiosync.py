@@ -1,4 +1,3 @@
-import ffmpeg
 import librosa
 import numpy as np
 import os
@@ -36,13 +35,6 @@ def extract(video_file, save_location):
     subprocess.run(cmd)
 
 
-# Vars
-n_fft = 1024
-hop_size = 512
-sampling_rate = 44100
-duration_limit = 120 # maximum duration of audio-video clips used to synchronize in seconds
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Replaces the audio in a video file with '
                                                  'an external audio and maintains AV sync.')
@@ -50,7 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--audio', help='path to audio file', required=True, type=str)
     parser.add_argument('-f', '--fft', default=1024, help='fft window size | recommended to be a power of 2 | default: 1024', required=False, type=int)
     parser.add_argument('-hl', '--hoplength', default=512, help='hop length | The number of samples between successive frames | default: 512', required=False, type=int)
-    parser.add_argument('-sr', '--samplingrate', default=44100, help='sampling rate | Most applications use 44.1kHz | default: 44100 Hz', required=False, type=str)
+    parser.add_argument('-sr', '--samplingrate', default=44100, help='sampling rate | Most applications use 44.1kHz | default: 44100 Hz', required=False, type=int)
     parser.add_argument('-d', '--duration', default=120, help='duration to check | default: 120 seconds', required=False, type=int)
     parser.add_argument('-o', '--output', help='export video file', required=True, type=str)
 
