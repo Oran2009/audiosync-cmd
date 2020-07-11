@@ -13,3 +13,27 @@
 `pip install -r requirements.txt`
 #### Python 3
 `pip3 install -r requirements.txt`
+
+## usage
+
+#### use the help command
+`python audiosync.py --help`
+
+#### arguments
+
+##### required
+`-v, --video | path to video file`
+
+`-a, --audio | path to audio file`
+
+`-o, --output | path to output file`
+
+##### optional
+
+`-f, --fft | fft window size | recommended to be a power of 2 | default: 1024`
+
+`-hl, --hoplength | hop length | the number of samples between successive frames | default: 512`
+
+`-sr, --samplingrate | sampling rate in Hz | Most applications use 44.1kHz | default: 44100Hz`
+
+`-d, --duration | duration to process | default: 120 seconds`
