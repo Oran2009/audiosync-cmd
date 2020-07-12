@@ -34,4 +34,4 @@
 
 `-sr, --samplingrate | sampling rate in Hz | Most applications use 44.1kHz | default: 44100Hz`
 
-`-d, --duration | duration to process | default: 120 seconds`
+`-d, --duration | duration to check for offsets | default: 120 seconds`
