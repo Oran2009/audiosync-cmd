@@ -40,7 +40,7 @@ if __name__ == '__main__':
                                                  'an external audio and maintains AV sync.')
     parser.add_argument('-v', '--video', help='path to video file', required=True, type=str)
     parser.add_argument('-a', '--audio', help='path to audio file', required=True, type=str)
-    parser.add_argument('-f', '--fft', default=1024, help='fft window size | recommended to be a power of 2 | default: 1024', required=False, type=int)
+    parser.add_argument('-f', '--fft', default=4410, help='fft window size | recommended to be a power of 2 | default: 4410', required=False, type=int)
     parser.add_argument('-hl', '--hoplength', default=512, help='hop length | The number of samples between successive frames | default: 512', required=False, type=int)
     parser.add_argument('-sr', '--samplingrate', default=44100, help='sampling rate in Hz | Most applications use 44.1kHz | default: 44100 Hz', required=False, type=int)
     parser.add_argument('-d', '--duration', default=120, help='duration to check for offsets | default: 120 seconds', required=False, type=int)
