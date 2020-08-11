@@ -28,7 +28,7 @@
 
 ##### optional
 
-`-f, --fft | fft window size | recommended to be a power of 2 | default: 1024`
+`-f, --fft | fft window size | recommended to be a power of 2 | default: 4410`
 
 `-hl, --hoplength | hop length | the number of samples between successive frames | default: 512`
 
